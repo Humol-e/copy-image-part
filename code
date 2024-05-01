@@ -1,0 +1,63 @@
+import cv2
+import numpy as np
+
+img = cv2.imread('D:\\CODES\\python\\opencv\\si.JPG',1)
+img = cv2.resize(img, (512,512))
+#img = np.zeros((512,512,3), np.uint8)
+
+
+coords = None
+contador = 0
+coords1 = None
+coords2 = None
+cv2.imshow('img', img)
+roi = None 
+
+
+def click_event(event, x, y, flags, param):
+    global coords, contador, coords1, coords2, roi
+    if event == cv2.EVENT_LBUTTONDOWN:
+        if contador == 0:
+            coords1 = (x,y) 
+        elif contador == 1:
+            coords2 = (x,y)
+        elif contador == 2:
+            # Define ROI based on the first two clicks
+            x1, y1 = coords1
+            x2, y2 = coords2
+            roi = img[y1:y2, x1:x2]  # Extract the ROI
+
+            # Paste the ROI onto the image at the third click
+            img[y:y + roi.shape[0], x:x + roi.shape[1]] = roi
+
+            cv2.imshow('img', img)
+            print("ROI pasted at the third click")
+        contador +=1
+
+        #font = cv2.FONT_HERSHEY_SIMPLEX
+        #strXY = str(x) + ', '+ str(y)
+        #cv2.putText(img,strXY, (x,y), font, 1 , (255,255,0) ,2 )
+        cv2.imshow('img', img)
+
+        coords = (x,y)
+        if coords is not None:
+            print(coords)
+        if contador >= 3:
+            contador = 0
+            
+#copia= img[x1:y1, x2:y2]
+
+
+
+cv2.namedWindow('img', cv2.WINDOW_NORMAL)
+#cv2.imshow('image', img)
+cv2.setMouseCallback('img', click_event)
+
+if img is None:
+    print("Error, no cargo la imagen")
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+print(coords1)
+print(coords2)
