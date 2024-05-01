@@ -1,7 +1,20 @@
 import cv2
 import numpy as np
+import tkinter as tk
+from tkinter import filedialog
 
-img = cv2.imread('D:\\CODES\\python\\opencv\\si.JPG',1)
+def select_image():
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename()
+    root.destroy()
+    return(file_path)
+
+image_path = select_image()
+
+
+#img = cv2.imread('D:\\CODES\\python\\opencv\\si.JPG',1)
+img = cv2.imread(image_path,1)
 img = cv2.resize(img, (512,512))
 #img = np.zeros((512,512,3), np.uint8)
 
@@ -22,7 +35,7 @@ def click_event(event, x, y, flags, param):
         elif contador == 1:
             coords2 = (x,y)
         elif contador == 2:
-            # Define ROI based on the first two clicks
+            # THIS PARTS MAKES THE ROI WORK OUT
             x1, y1 = coords1
             x2, y2 = coords2
             roi = img[y1:y2, x1:x2]  # Extract the ROI
